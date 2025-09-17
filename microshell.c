@@ -6,7 +6,7 @@
 /*   By: abaryshe <abaryshe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/15 17:51:00 by abaryshe          #+#    #+#             */
-/*   Updated: 2025/09/17 13:25:51 by abaryshe         ###   ########.fr       */
+/*   Updated: 2025/09/17 14:39:37 by abaryshe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,15 @@ int	ft_error(char *msg)
 	return (1);
 }
 
+int	execute_cd(char **argv, int i)
+{
+	if (i != 2)
+		return (ft_error(ERR_CD_ARG));
+	if (chdir(argv[1]) == -1)
+		return (ft_error(ERR_CD_FAIL) & ft_error(argv[1]) & ft_error("\n"));
+	return (0);
+}
+
 int	execute_cmd(char **argv, int i, char **envp)
 {
 	int	pid;
@@ -41,7 +50,11 @@ int	execute_cmd(char **argv, int i, char **envp)
 	{
 		argv[i] = NULL;
 		execve(*argv, argv, envp);
-		return (ft_error(ERR_EXECVE) & ft_error(*argv) & ft_error("\n"));
+	//	return (ft_error(ERR_EXECVE) & ft_error(*argv) & ft_error("\n"));
+		ft_error(ERR_EXECVE);
+		ft_error(*argv);
+		ft_error("\n");
+		exit(1);
 	}
 	if (waitpid(pid, &ret, 0) == -1)
 		return (ft_error(ERR_FATAL));
@@ -53,16 +66,20 @@ int	execute_cmd(char **argv, int i, char **envp)
 int	main(int argc, char **argv, char **envp)
 {
 	int	ret = 0;
-	int	i = 1;
+	int	i = 0;
 
 	if (argc < 2)
 		return (0);
-	while (argv[i])
+	while (argv[i] && argv[++i])
 	{
 		argv = argv + i;
+		i = 0;
 		while ((argv[i]) && (strcmp(argv[i], ";")))
-		      i++;
-		ret = execute_cmd(argv, i, envp);
+			i++;
+		if (*argv && (strcmp(*argv, "cd") == 0))
+			ret = execute_cd(argv, i);
+		else if (i)
+			ret = execute_cmd(argv, i, envp);
 	}
 	return (ret);
 }

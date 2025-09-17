@@ -6,7 +6,7 @@
 /*   By: abaryshe <abaryshe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/15 17:51:51 by abaryshe          #+#    #+#             */
-/*   Updated: 2025/09/17 11:34:54 by abaryshe         ###   ########.fr       */
+/*   Updated: 2025/09/17 13:56:04 by abaryshe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,5 +22,7 @@
 // messages:
 # define ERR_FATAL "error: fatal\n"
 # define ERR_EXECVE "error: cannot execute "
+# define ERR_CD_ARG "error: cd: bad arguments\n"
+# define ERR_CD_FAIL "error: cd: cannot change directory to "
 
 #endif

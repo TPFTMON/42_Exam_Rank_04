@@ -6,7 +6,7 @@
 /*   By: abaryshe <abaryshe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/15 17:51:51 by abaryshe          #+#    #+#             */
-/*   Updated: 2025/09/16 12:05:20 by abaryshe         ###   ########.fr       */
+/*   Updated: 2025/09/17 11:34:54 by abaryshe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,5 +17,10 @@
 # include <stdlib.h>
 # include <sys/wait.h>
 # include <string.h>
+# include <sys/types.h>
+
+// messages:
+# define ERR_FATAL "error: fatal\n"
+# define ERR_EXECVE "error: cannot execute "
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: abaryshe <abaryshe@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/15 17:51:00 by abaryshe          #+#    #+#             */
-/*   Updated: 2025/09/23 04:38:36 by abaryshe         ###   ########.fr       */
+/*   Updated: 2025/09/23 04:55:26 by abaryshe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,24 +66,25 @@ int	execute_cmd(char **argv, int i, char **envp)
 		execve(argv[0], argv, envp);
 		exit(ft_error(ERR_EXECVE) & ft_error(*argv) & ft_error("\n"));
 	}
+	if (close(tmp) == -1)
+		return (ft_error(ERR_FATAL));
+	if (pip)
+	{
+		tmp = fds[0];
+		if (close(fds[1]) == -1)
+			return (ft_error(ERR_FATAL));
+	}
 	else
 	{
-		if (!pip)
-		{
-			if (dup2(0, tmp) == -1)
-				return (ft_error(ERR_FATAL));
-		}
-		else
-		{
-			if ((dup2(fds[0], tmp) == -1) | (close(fds[0]) == -1) | (close(fds[1]) == -1))
-				return (ft_error(ERR_FATAL));
-		}
-		if (waitpid(pid, &ret, 0) == -1)
+		tmp = dup(0);
+		if (tmp == -1)
 			return (ft_error(ERR_FATAL));
-		if (WIFEXITED(ret))
-			return (WEXITSTATUS(ret));
-		return (1);
 	}
+	if (waitpid(pid, &ret, 0) == -1)
+		return (ft_error(ERR_FATAL));
+	if (WIFEXITED(ret))
+		return (WEXITSTATUS(ret));
+	return (1);
 }
 
 int	main(int argc, char **argv, char **envp)
@@ -135,7 +136,7 @@ int	main(int argc, char **argv, char **envp)
 // 		if (pip)
 // 		{
 // 			if ((pip && dup2(fds[1], 1) == -1) | (close(fds[0]) ==
-					// -1) | (close(fds[1]) == -1))
+// -1) | (close(fds[1]) == -1))
 // 				exit(ft_error(ERR_FATAL));
 // 		}
 // 		execve(*argv, argv, envp);
